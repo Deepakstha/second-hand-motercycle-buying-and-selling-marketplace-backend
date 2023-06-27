@@ -9,8 +9,10 @@ const { multer, storage } = require("./../servces/multer");
 const upload = multer({ storage: storage });
 
 router.post("/create_products",
- 
-    upload.single("photo"),
+    authController.isLoggedIn,
+    authController.checkuser,
+    authController.givePermissionTo("seller"),
+    upload.array("photo", 5),
     productController.create_product
 );
 

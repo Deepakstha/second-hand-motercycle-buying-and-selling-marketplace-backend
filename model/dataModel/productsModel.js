@@ -4,39 +4,39 @@ module.exports = (sequelize, Sequelize) => {
     const Product = sequelize.define("products", {
         name: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
         brand: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         years: {
             type: Sequelize.STRING,  
-            allowNull: false
+            allowNull: true
         },
         price: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
         description:{
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
         modal:{
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
         images:{
-            type: Sequelize.STRING,
-            allowNull: false
+            type: Sequelize.JSON,
+            allowNull: true
         },
         shortDescription:{
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: true
         },
         userId:{
             type: Sequelize.INTEGER,
-            // allowNull: false
+            // allowNull: true
         }
     })
 

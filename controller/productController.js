@@ -15,7 +15,6 @@ const multerFilter = (req, file, cb) => {
     }else{
         console.log("image not found");
         process.exit(1);
-        // cb(statusFunc(res))
     }
 }
 
@@ -33,21 +32,25 @@ const statusFunc = (res, status, message) => {
 }
 
 exports.create_product = catchAsync(async (req, res) => { 
-    console.log(req.file);
+    console.log(req.files);
+    const imagesName = [];
+    req.files.forEach(ele => {
+        imagesName.push(ele.filename)
+    });
+    
+    const created_product = await product.create({
+        name: req.body.name,
+        brand: req.body.brand,
+        years: req.body.years,
+        description: req.body.description,
+        price: req.body.price,
+        modal: req.body.modal,
+        images: imagesName,
+        shortDescription: req.body.shortDescription,
+        // userId: res.locals.userData.id
+    })
 
-    // const created_product = await product.create({
-    //     name: req.body.name,
-    //     brand: req.body.brand,
-    //     years: req.body.years,
-    //     description: req.body.description,
-    //     price: req.body.price,
-    //     modal: req.body.modal,
-    //     images: "img-001.png",
-    //     shortDescription: req.body.shortDescription,
-    //     // userId: res.locals.userData.id
-    // })
-
-    statusFunc(res, 201, "created_product");
+    statusFunc(res, 201, created_product);
 })
 
 
