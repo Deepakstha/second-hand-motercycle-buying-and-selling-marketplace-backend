@@ -1,15 +1,16 @@
 const router = require("express").Router();
 const productController = require("./../controller/productController");
-const multer = require("../servces/multer");
 
 const authController = require('./../controller/authController')
 const reviewController = require("./../controller/reviewController");
 const dashboardController = require("../controller/dashboardController");
 
+const { multer, storage } = require("./../servces/multer");
+const upload = multer({ storage: storage });
+
 router.post("/create_products",
-    authController.isLoggedIn,
-    authController.checkuser,
-    authController.givePermissionTo("seller"),
+ 
+    upload.single("photo"),
     productController.create_product
 );
 
@@ -56,18 +57,21 @@ router.patch("/:id/review/update",
 );
 
 
-// add to favourite
+// add to cart
 router.post("/addtocart/:productId", 
     authController.isLoggedIn,
     authController.checkuser,
     productController.addToCart
 );
 
+
+// add to favourite 
 router.post("/favourite/:productId", 
     authController.isLoggedIn,
     authController.checkuser,
     productController.AddToFavourites
 )
+
 
 // dashboard / tracker seller
 router.get("/dashboard/uploads", 
@@ -75,9 +79,6 @@ router.get("/dashboard/uploads",
     authController.checkuser,
     dashboardController.viewUploads
 );
-
-
-
 
 
 module.exports = router;

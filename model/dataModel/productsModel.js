@@ -7,11 +7,11 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         brand: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
             allowNull: false
         },
         years: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING,  
             allowNull: false
         },
         price: {
@@ -36,9 +36,21 @@ module.exports = (sequelize, Sequelize) => {
         },
         userId:{
             type: Sequelize.INTEGER,
-            allowNull: false
+            // allowNull: false
         }
     })
 
     return Product;
 }
+
+
+/*
+    STRING = 250 WORDS
+    TEXT = 500 W0RDS
+*/
+
+
+// ITEMS TO BE ADDED 
+// 1. CATEGORY
+// 2. BRAND SHOULD BE ID
+// 2. 

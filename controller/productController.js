@@ -1,8 +1,29 @@
+const multer = require("multer");
+const process = require("node:process");
+
 const catchAsync = require('../utils/catchAsync');
 const database = require('./../model/index');
 const product = database.products;
 const addToCart = database.addToCarts;
 const favourite = database.favourites;
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+    if(file.mimetype.startsWith("image")){
+        cb(null, true);
+    }else{
+        console.log("image not found");
+        process.exit(1);
+        // cb(statusFunc(res))
+    }
+}
+
+const upload = {
+    storage: multerStorage,
+    fileFilter: multerFilter
+}
+
 
 const statusFunc = (res, status, message) => {
     res.json({
@@ -11,20 +32,22 @@ const statusFunc = (res, status, message) => {
     })
 }
 
-exports.create_product = catchAsync(async (req, res) => {
-    const created_product = await product.create({
-        name: req.body.name,
-        brand: req.body.brand,
-        years: req.body.years,
-        description: req.body.description,
-        price: req.body.price,
-        modal: req.body.modal,
-        images: "img-001.png",
-        shortDescription: req.body.shortDescription,
-        userId: res.locals.userData.id
-    })
+exports.create_product = catchAsync(async (req, res) => { 
+    console.log(req.file);
 
-    statusFunc(res, 201, created_product);
+    // const created_product = await product.create({
+    //     name: req.body.name,
+    //     brand: req.body.brand,
+    //     years: req.body.years,
+    //     description: req.body.description,
+    //     price: req.body.price,
+    //     modal: req.body.modal,
+    //     images: "img-001.png",
+    //     shortDescription: req.body.shortDescription,
+    //     // userId: res.locals.userData.id
+    // })
+
+    statusFunc(res, 201, "created_product");
 })
 
 
@@ -104,7 +127,7 @@ exports.addToCart = catchAsync(async (req, res) => {
         productId: req.params.productId * 1
     })
 
-    statusFunc(res, 201, add_to_cart)
+    statusFunc(res, 201, add_to_cart);
 })
 
 exports.AddToFavourites = catchAsync(async (req, res) => {
@@ -123,5 +146,6 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
         userId: res.locals.userData.id,
         productId: req.params.id
     })
+
     statusFunc(res, 201, add_favourite)
 })
