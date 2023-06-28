@@ -1,13 +1,13 @@
 module.exports = {
     HOST: "localhost",
-    USER:"root",
-    PASS:"",
-    POST: 3360,
+    USER: "root",
+    PASS: "",
+
 
     // database identification
     db: "second_hand",
     dialect: "mysql",
-    pool:{
+    pool: {
         max: 5,
         min: 0,
         accurate: 30000,

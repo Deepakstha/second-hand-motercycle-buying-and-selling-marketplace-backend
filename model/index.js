@@ -1,13 +1,13 @@
 const DBconfig = require("./../config/config");
 
-const {Sequelize, DataTypes} = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
-const sequelize = new Sequelize(DBconfig.db, DBconfig.USER, DBconfig.PASS,{
+const sequelize = new Sequelize(DBconfig.db, DBconfig.USER, DBconfig.PASS, {
     host: DBconfig.HOST,
     dialect: DBconfig.dialect,
     operatirAlias: false,
     loggin: false,
-    pool:{
+    pool: {
         max: DBconfig.max,
         min: DBconfig.min,
         accurate: DBconfig.accurate,
@@ -26,15 +26,17 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require("./dataModel/userModel")(sequelize, DataTypes);
+db.googleUsers = require("./dataModel/googleUser")(sequelize, DataTypes)
 db.products = require("./dataModel/productsModel")(sequelize, DataTypes);
 db.reviews = require("./dataModel/reviewModel")(sequelize, DataTypes);
 db.favourites = require("./dataModel/favourite")(sequelize, DataTypes);
 db.addToCarts = require("./dataModel/addToCart")(sequelize, DataTypes);
 db.brands = require("./dataModel/brandModel")(sequelize, DataTypes);
 
+
 // relation reviews
 db.users.hasMany(db.reviews);
-db.reviews.belongsTo(db.users );
+db.reviews.belongsTo(db.users);
 
 // relation uploads product
 db.users.hasMany(db.products);

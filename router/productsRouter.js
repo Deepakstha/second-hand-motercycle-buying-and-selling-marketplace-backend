@@ -10,17 +10,16 @@ const upload = multer({ storage: storage });
 
 router.post("/create_products",
     authController.isLoggedIn,
-    authController.checkuser,
     authController.givePermissionTo("seller"),
     upload.array("photo", 5),
     productController.create_product
 );
 
-router.get("/show_products", 
+router.get("/show_products",
     productController.show_products
 );
 
-router.get("/show_one_product/:id", 
+router.get("/show_one_product/:id",
     productController.showone
 );
 
@@ -31,7 +30,7 @@ router.patch("/update_product/:id",
     productController.update_products
 );
 
-router.delete("/delete_product/:id", 
+router.delete("/delete_product/:id",
     authController.isLoggedIn,
     authController.checkuser,
     authController.givePermissionTo("seller"),
@@ -40,15 +39,15 @@ router.delete("/delete_product/:id",
 
 
 // review
-router.post("/:id/review", 
+router.post("/:id/review",
     authController.isLoggedIn,
     authController.checkuser,
     reviewController.review_upload
 );
 
-router.delete("/:id/review/delete", 
-    authController.isLoggedIn, 
-    authController.checkuser, 
+router.delete("/:id/review/delete",
+    authController.isLoggedIn,
+    authController.checkuser,
     reviewController.deleteReview
 );
 
@@ -60,7 +59,7 @@ router.patch("/:id/review/update",
 
 
 // add to cart
-router.post("/addtocart/:productId", 
+router.post("/addtocart/:productId",
     authController.isLoggedIn,
     authController.checkuser,
     productController.addToCart
@@ -68,7 +67,7 @@ router.post("/addtocart/:productId",
 
 
 // add to favourite 
-router.post("/favourite/:productId", 
+router.post("/favourite/:productId",
     authController.isLoggedIn,
     authController.checkuser,
     productController.AddToFavourites
@@ -76,7 +75,7 @@ router.post("/favourite/:productId",
 
 
 // dashboard / tracker seller
-router.get("/dashboard/uploads", 
+router.get("/dashboard/uploads",
     authController.isLoggedIn,
     authController.checkuser,
     dashboardController.viewUploads
