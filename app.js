@@ -5,6 +5,7 @@ const session = require('express-session');
 const cors = require("cors");
 const process = require("node:process");
 const jwt = require("jsonwebtoken");
+const statusFunc = require("./utils/statusFunc")
 require("dotenv").config({
     path: "./config.env"
 })
@@ -58,10 +59,10 @@ app.get(
 app.get(
     "/auth/google/callback",
     passport.authenticate("google", {
-        failureRedirect: "http://127.0.0.1:5173/login",
+        failureRedirect: "http://127.0.0.1:3000/login",
     }),
     async function (req, res) {
-        console.log(userProfile)
+        console.log(userProfile, "-#######################")
         const findUserByEmail = await db.googleUsers.findAll({
             where: {
 
@@ -69,8 +70,15 @@ app.get(
             }
         });
         let token;
+        let tokens;
+        console.log(findUserByEmail, "Existing uSer")
+
+
+
         if (findUserByEmail.length > 0) {
-            token = findUserByEmail.id;
+            token = jwt.sign({ id: findUserByEmail[0].googleId }, process.env.JWT_SECRET, {
+                expiresIn: process.env.COOKIE_EXPIRES_IN
+            })
         } else {
             let user
             try {
@@ -81,21 +89,22 @@ app.get(
                     googleId: userProfile.id,
                     role: "user"
                 });
-                token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-                    expiresIn: process.env.JWT_EXPIRES_IN
+                tokens = userProfile.id;
+                console.log("Hello Token")
+                token = jwt.sign({ id: userProfile.id }, process.env.JWT_SECRET, {
+                    expiresIn: process.env.COOKIE_EXPIRES_IN
                 })
-                console.log(user)
-                console.log(token, "Inside")
             } catch (error) {
                 console.log(error)
             }
         }
-        console.log(token)
-        // res.header("Access-Control-Allow-Credentials", true);
+        res.cookie("jwt", token, {
+            httpOnly: true
+        })
 
         // Successful authentication, redirect success.
-        res.cookie("hello", token)
-        res.redirect("/")
+        res.redirect("http://localhost:3000/" + token)
+
     }
 );
 
@@ -118,15 +127,19 @@ app.use("/api/v1/user", cors(corsOptions), userRouter);
 app.use("/api/v1/products", cors(corsOptions), productRouter);
 app.use("/api/v1/admin", cors(corsOptions), adminRouter);  // -> super admin pannel
 app.use("/vehicles", cors(corsOptions), vehicleRouter);
+app.use("*",(req,res)=>{
+    res.status(401).json({message:"Not found"})
+})
+
 
 // server 
 const server = app.listen(port, () => {
     console.log("server is running at port : ", port);
 })
 
-process.on('unhandledRejection', (err) => {
-    console.log("unhandeled promise rejection");
-    server.close(() => {
-        process.exit(1);
-    })
-})
+// process.on('unhandledRejection', (err) => {
+//     console.log("unhandeled promise rejection");
+//     server.close(() => {
+//         process.exit(1);
+//     })
+// })

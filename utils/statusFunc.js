@@ -1,6 +1,6 @@
 module.exports = (res, status, message) => {
-    return res.json({
-        status, 
+    return res.status(status).json({
+        status,
         message
     })
 }
