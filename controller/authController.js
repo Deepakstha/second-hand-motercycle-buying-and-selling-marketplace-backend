@@ -77,7 +77,7 @@ exports.login = async (req, res) => {
 
     if (await bcrypt.compare(req.body.password, userSignin.password)) {
         // userSignin.refreshToken = jwt.sign(userSignin, );
-        createCookies(res, 200, userSignin);
+        createCookies(res, 200, userSignin)
     }
 }
 

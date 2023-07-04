@@ -81,5 +81,8 @@ router.get("/dashboard/uploads",
     dashboardController.viewUploads
 );
 
+router.get("/search/:key",productController.searchProduct)
+
+
 
 module.exports = router;

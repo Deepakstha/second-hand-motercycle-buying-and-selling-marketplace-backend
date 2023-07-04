@@ -1,5 +1,6 @@
 const database = require("../index");
 
+
 module.exports = (sequelize, Sequelize) => {
     const Product = sequelize.define("products", {
         name: {

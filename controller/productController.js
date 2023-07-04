@@ -6,6 +6,8 @@ const database = require('./../model/index');
 const product = database.products;
 const addToCart = database.addToCarts;
 const favourite = database.favourites;
+const Op = require('sequelize').Op;
+
 
 const multerStorage = multer.memoryStorage();
 
@@ -151,4 +153,29 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
     })
 
     statusFunc(res, 201, add_favourite)
+})
+
+exports.searchProduct = catchAsync(async (req, res) =>{
+    const searchQuery = req.params.key
+    const search = await product.findAll({where:{
+        [Op.or]: [
+            {
+                name:{
+                [Op.like]:`%${searchQuery}%`
+                }
+            },
+            {
+                brand : {
+                    [Op.like]:`%${searchQuery}%`
+                },
+            },
+            {
+                modal:{
+                    [Op.like]:`%${searchQuery}%`
+                }
+            }
+            ]
+    }})
+    console.log(search)
+    return res.json({search})
 })

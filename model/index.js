@@ -26,7 +26,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require("./dataModel/userModel")(sequelize, DataTypes);
-db.googleUsers = require("./dataModel/googleUser")(sequelize, DataTypes)
 db.products = require("./dataModel/productsModel")(sequelize, DataTypes);
 db.reviews = require("./dataModel/reviewModel")(sequelize, DataTypes);
 db.favourites = require("./dataModel/favourite")(sequelize, DataTypes);

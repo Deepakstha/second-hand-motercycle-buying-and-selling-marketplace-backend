@@ -6,6 +6,8 @@ const cors = require("cors");
 const process = require("node:process");
 const jwt = require("jsonwebtoken");
 const statusFunc = require("./utils/statusFunc")
+const bcrypt = require('bcrypt');
+
 require("dotenv").config({
     path: "./config.env"
 })
@@ -62,35 +64,30 @@ app.get(
         failureRedirect: "http://127.0.0.1:3000/login",
     }),
     async function (req, res) {
-        console.log(userProfile, "-#######################")
-        const findUserByEmail = await db.googleUsers.findAll({
+        const findUserByEmail = await db.users.findAll({
             where: {
 
                 email: userProfile.emails[0].value,
             }
         });
         let token;
-        let tokens;
-        console.log(findUserByEmail, "Existing uSer")
 
 
 
         if (findUserByEmail.length > 0) {
-            token = jwt.sign({ id: findUserByEmail[0].googleId }, process.env.JWT_SECRET, {
+            token = jwt.sign({ id: findUserByEmail[0].id }, process.env.JWT_SECRET, {
                 expiresIn: process.env.COOKIE_EXPIRES_IN
             })
         } else {
             let user
             try {
-                user = await db.googleUsers.create({
+                user = await db.users.create({
                     firstName: userProfile.name.givenName,
                     lastName: userProfile.name.familyName,
                     email: userProfile.emails[0].value,
-                    googleId: userProfile.id,
+                    password: await bcrypt.hash(userProfile.id+ Date.now(), 12), 
                     role: "user"
                 });
-                tokens = userProfile.id;
-                console.log("Hello Token")
                 token = jwt.sign({ id: userProfile.id }, process.env.JWT_SECRET, {
                     expiresIn: process.env.COOKIE_EXPIRES_IN
                 })
